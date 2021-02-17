@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <string.h>
+#include <fstream>
 using namespace std;
 
 void simpleSearch(const char*, const char*);
@@ -11,6 +12,38 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
     if (argc == 1) // if no arguments provided, ask the user for input
     {
         askForInputAndSearch();
+    }
+
+    if (argc == 3) // if 3 arguments provided, like so `mygrep needle haystack.txt` 
+    {
+        char* stringToSearch = argv[1];
+        char* filename = argv[2];
+
+        // char* stringToSearch = "following"; // debug
+        // char* filename = "../teht-anto/man_grep_plain_ASCII.txt"; // debug
+
+        cout << stringToSearch << endl;
+        cout << filename << endl;
+
+        string line;
+        ifstream myfile;
+        myfile.open(filename);
+        if (myfile.is_open())
+        {
+            while (!myfile.eof())
+            {
+                getline(myfile, line);
+                const char* result = strstr(line.c_str(), stringToSearch);
+                if (result != NULL)
+                {
+                    cout << line << endl;
+                }
+            }
+        }
+        else
+        {
+            cerr << "Error opening file " << filename << endl;
+        }
     }
 }
 
