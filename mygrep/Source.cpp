@@ -101,7 +101,7 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
             }
             if (printOccuranceCount)
             {
-                cout << "\nOccurrences of lines containing "<< stringToSearch << "\": " << countOccurrences << endl;
+                cout << "\nOccurrences of lines containing \""<< stringToSearch << "\": " << countOccurrences << endl;
             }
             
         }
