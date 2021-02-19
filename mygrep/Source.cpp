@@ -69,7 +69,12 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         if (stringContainsChar(options, "o"))
         {
             printOccuranceCount = true;
-        }        
+        }
+
+        if (stringContainsChar(options, "r"))
+        {
+            ExcludeSearchLines = true;   
+        }     
 
         // char* stringToSearch = "following"; // debug
         // char* filename = "../teht-anto/man_grep_plain_ASCII.txt"; // debug
@@ -87,21 +92,46 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
                 getline(myfile, line);
                 currentLine++;
                 const char* result = strstr(line.c_str(), stringToSearch);
-                if (result != NULL)
+                if (ExcludeSearchLines == true)
                 {
-                    countOccurrences++;
-
-                    if (printLineNumbers)
+                    if (result == NULL)
                     {
-                        cout << currentLine << ": ";
+                        countOccurrences++;
+
+                        if (printLineNumbers)
+                        {
+                            cout << currentLine << ": ";
+                        }
+                        
+                        cout << line << endl;
                     }
-                    
-                    cout << line << endl;
                 }
+                else
+                {
+                    if (result != NULL)
+                    {
+                        countOccurrences++;
+
+                        if (printLineNumbers)
+                        {
+                            cout << currentLine << ": ";
+                        }
+                        
+                        cout << line << endl;
+                    }
+                }
+                
+
             }
             if (printOccuranceCount)
             {
-                cout << "\nOccurrences of lines containing \""<< stringToSearch << "\": " << countOccurrences << endl;
+                cout << "\nOccurrences of lines ";
+                if (ExcludeSearchLines)
+                {
+                    cout << "not ";
+                }
+                
+                cout << "containing \""<< stringToSearch << "\": " << countOccurrences << endl;
             }
             
         }
