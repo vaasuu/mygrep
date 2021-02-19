@@ -7,6 +7,7 @@ using namespace std;
 void simpleSearch(const char*, const char*);
 void askForInputAndSearch();
 bool stringContainsChar(string str, string character);
+char* strcasestr(const char* bigStr, const char* searchStr);
 
 int main(int argc, char *argv[]){   // get arguments from binary ran from cli
 
@@ -14,13 +15,29 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
     bool printLineNumbers = false;
     bool ExcludeSearchLines = false;
     bool IgnoreCase = false;
+    const char* result;
+
+    try
+    {
+        if (argc > 4)
+        {
+            throw "Too many arguments. ";
+        }
+        
+    }
+    catch(const char * e)
+    {
+        cerr << "An exception occurred. ";
+        cerr << e << endl;
+        exit(1);
+    }
 
     if (argc == 1) // if no arguments provided, ask the user for input
     {
         askForInputAndSearch();
     }
 
-    if (argc == 3) // if 3 arguments provided, like so `mygrep needle haystack.txt` 
+    else if (argc == 3) // if 3 arguments provided, like so `mygrep needle haystack.txt` 
     {
         char* stringToSearch = argv[1];
         char* filename = argv[2];
@@ -52,7 +69,7 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         }
     }
 
-    if (argc == 4)
+    else if (argc == 4)
     {
 
         string options_arg = argv[1];
@@ -91,7 +108,16 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
             {
                 getline(myfile, line);
                 currentLine++;
-                const char* result = strstr(line.c_str(), stringToSearch);
+
+                if (IgnoreCase == false)
+                {
+                    const char* result = strstr(line.c_str(), stringToSearch);
+                }
+                else
+                {
+                    const char* result = strcasestr(line.c_str(), stringToSearch);
+                }
+            
                 if (ExcludeSearchLines == true)
                 {
                     if (result == NULL)
@@ -177,4 +203,43 @@ bool stringContainsChar(string str, string character){
     {
         return false;
     }
+}
+
+char* strcasestr(const char* bigStr, const char* searchStr)
+{
+    // Allocate space for copy buffers for parameters:
+    char* big_p = new char[strlen(bigStr) + 1];
+    char* search_p = new char[strlen(searchStr) + 1];
+
+    char* point_p;
+    int offset;
+
+    // Copy:
+    strcpy(big_p, bigStr);
+    strcpy(search_p, searchStr);
+
+    // Convert each letter in big_p to lowercase:
+    int i = 0;
+    while (*(big_p + i) != '\0') {
+        *(big_p + i) = tolower(*(big_p + i));
+        i++;
+    }
+
+    // Same to search_p:
+    i = 0;
+    while (*(search_p + i) != '\0') {
+        *(search_p + i) = tolower(*(search_p + i));
+        i++;
+    }
+
+    // strstr can do case sensitive substring search but now both strings are lowercase =>
+    // it is enough in here:
+    point_p = strstr(big_p, search_p);
+    offset = point_p - big_p;   // take the offset from found address to string beginning:
+
+    delete[] big_p;
+    delete[] search_p;
+
+    // Return the point in parameter string or nullptr:
+    return point_p != nullptr ? ( char * )bigStr + offset : point_p;
 }
