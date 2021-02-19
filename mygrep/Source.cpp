@@ -11,11 +11,6 @@ char* strcasestr(const char* bigStr, const char* searchStr);
 
 int main(int argc, char *argv[]){   // get arguments from binary ran from cli
 
-    bool printOccuranceCount = false;
-    bool printLineNumbers = false;
-    bool ExcludeSearchLines = false;
-    bool IgnoreCase = false;
-    const char* result;
 
     try
     {
@@ -25,7 +20,7 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         }
         
     }
-    catch(const char * e)
+    catch(const char* e)
     {
         cerr << "An exception occurred. ";
         cerr << e << endl;
@@ -39,11 +34,8 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
 
     else if (argc == 3) // if 3 arguments provided, like so `mygrep needle haystack.txt` 
     {
-        char* stringToSearch = argv[1];
-        char* filename = argv[2];
-
-        // char* stringToSearch = "following"; // debug
-        // char* filename = "../teht-anto/man_grep_plain_ASCII.txt"; // debug
+        char *stringToSearch = argv[1];
+        char *filename = argv[2];
 
         // cout << stringToSearch << endl;
         // cout << filename << endl;
@@ -57,7 +49,7 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
             {
                 getline(myfile, line);
                 const char* result = strstr(line.c_str(), stringToSearch);
-                if (result != NULL)
+                if (result != nullptr)
                 {
                     cout << line << endl;
                 }
@@ -77,8 +69,15 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         char* filename = argv[3];
 
         string options = options_arg.substr(2,string::npos);
-
         
+
+        bool printOccuranceCount = false;
+        bool printLineNumbers = false;
+        bool ExcludeSearchLines = false;
+        bool IgnoreCase = false;
+        const char* result = nullptr;
+        
+
         if (stringContainsChar(options, "l"))
         {
             printLineNumbers = true;
@@ -92,6 +91,17 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         {
             ExcludeSearchLines = true;   
         }     
+
+        if (stringContainsChar(options, "i"))
+        {
+            IgnoreCase = true;   
+        }
+
+        // cout << "Debug<<\n";
+        // cout << " printOccuranceCount " << printOccuranceCount << endl;
+        // cout << " printLineNumbers " << printLineNumbers << endl;
+        // cout << " ExcludeSearchLines " << ExcludeSearchLines << endl;
+        // cout << " IgnoreCase " << IgnoreCase << endl;
 
         // char* stringToSearch = "following"; // debug
         // char* filename = "../teht-anto/man_grep_plain_ASCII.txt"; // debug
@@ -109,18 +119,18 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
                 getline(myfile, line);
                 currentLine++;
 
-                if (IgnoreCase == false)
+                if (IgnoreCase == true)
                 {
-                    const char* result = strstr(line.c_str(), stringToSearch);
+                    result = strcasestr(line.c_str(), stringToSearch);
                 }
                 else
                 {
-                    const char* result = strcasestr(line.c_str(), stringToSearch);
+                    result = strstr(line.c_str(), stringToSearch);
                 }
             
                 if (ExcludeSearchLines == true)
                 {
-                    if (result == NULL)
+                    if (result == nullptr)
                     {
                         countOccurrences++;
 
@@ -134,7 +144,7 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
                 }
                 else
                 {
-                    if (result != NULL)
+                    if (result != nullptr)
                     {
                         countOccurrences++;
 
@@ -183,7 +193,7 @@ void simpleSearch(const char* stringToSearchFrom, const char* stringToSearch){
     
     const char* result = strstr(stringToSearchFrom, stringToSearch); // returns a pointer to the first occurrence of stringToSearch in stringToSearchFrom, or a null pointer if stringToSearch is not part of stringToSearchFrom
 
-    if (result != NULL) // check for match, if found, print strings and index
+    if (result != nullptr) // check for match, if found, print strings and index
         {
             int position = result-stringToSearchFrom; // calculate substring's index in bigstring
             cout << "\n" << '"' << stringToSearch << '"' << " found in \"" << stringToSearchFrom << '"' << " in position " << position << endl;
