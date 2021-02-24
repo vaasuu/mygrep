@@ -26,6 +26,11 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
     if (argc == 1) // if no arguments provided, ask the user for input
         askForInputAndSearch();
 
+    else if (argc == 2)
+    {
+        cerr << "Illegal amount of arguments.";
+    }
+    
     else if (argc == 3) // if 3 arguments provided, like so `mygrep needle haystack.txt` 
     {
         char *stringToSearch = argv[1];
