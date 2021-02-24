@@ -62,8 +62,14 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         char* stringToSearch = argv[2];
         char* filename = argv[3];
 
+        if (!((options_arg[0] == '-') and (options_arg[1] == 'o')))
+        {
+            cerr << "Illegal use of arguments!" << endl;
+            return 1;
+        }
+        
         string options = options_arg.substr(2,string::npos);
-
+              
         bool printOccuranceCount = false;
         bool printLineNumbers = false;
         bool ExcludeSearchLines = false;
