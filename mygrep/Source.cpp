@@ -11,22 +11,23 @@ char* strcasestr(const char* bigStr, const char* searchStr);
 
 int main(int argc, char *argv[]){   // get arguments from binary ran from cli
 
+    // handle too many arguments
     try
     {
         if (argc > 4)
-            throw "Too many arguments. ";
+            throw "Too many arguments. "; // throw exception
     }
     catch(const char* e)
     {
         cerr << "An exception occurred. ";
         cerr << e << endl;
-        exit(1);
+        exit(1); // exit program
     }
 
     if (argc == 1) // if no arguments provided, ask the user for input
         askForInputAndSearch();
 
-    else if (argc == 2)
+    else if (argc == 2) // Only one argument -> error 
     {
         cerr << "Illegal amount of arguments.";
     }
@@ -41,35 +42,36 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
 
         string line;
         ifstream myfile;
-        myfile.open(filename);
+        myfile.open(filename); // open file
         if (myfile.is_open())
         {
-            while (!myfile.eof())
+            while (!myfile.eof()) // read until end of file
             {
                 getline(myfile, line);
-                const char* result = strstr(line.c_str(), stringToSearch);
-                if (result != nullptr)
-                    cout << line << endl;
+                const char* result = strstr(line.c_str(), stringToSearch); // search line
+                if (result != nullptr) // if line contains searched string
+                    cout << line << endl; // print it
             }
         }
         else
-            cerr << "Error opening file " << filename << endl;
+            cerr << "Error opening file " << filename << endl; // print error
     }
 
     else if (argc == 4)
     {
-        string options_arg = argv[1];
-        char* stringToSearch = argv[2];
-        char* filename = argv[3];
+        string options_arg = argv[1]; // options -oxyz
+        char* stringToSearch = argv[2]; // needle
+        char* filename = argv[3]; // haystack.txt
 
-        if (!((options_arg[0] == '-') and (options_arg[1] == 'o')))
+        if (!((options_arg[0] == '-') and (options_arg[1] == 'o'))) // if optionsarg doesn't start with '-o' print error
         {
             cerr << "Illegal use of arguments!" << endl;
             return 1;
         }
         
-        string options = options_arg.substr(2,string::npos);
-              
+        string options = options_arg.substr(2,string::npos); // remove first 2 characters from options argument
+
+        // set option booleans
         bool printOccuranceCount = false;
         bool printLineNumbers = false;
         bool ExcludeSearchLines = false;
@@ -103,53 +105,54 @@ int main(int argc, char *argv[]){   // get arguments from binary ran from cli
         string line;
         ifstream myfile;
         myfile.open(filename);
-        if (myfile.is_open())
+        if (myfile.is_open()) // run if file can be opened
         {
-            while (!myfile.eof())
+            while (!myfile.eof()) // read untill end of file
             {
-                getline(myfile, line);
+                getline(myfile, line); // get line of file
                 currentLine++;
 
                 if (IgnoreCase == true)
-                    result = strcasestr(line.c_str(), stringToSearch);
+                    result = strcasestr(line.c_str(), stringToSearch); // if IgnoreCase, run with caseinsensitive search
                 else
-                    result = strstr(line.c_str(), stringToSearch);
+                    result = strstr(line.c_str(), stringToSearch); // else run casesensitive search
             
-                if (ExcludeSearchLines == true)
+                if (ExcludeSearchLines == true) // if ExcludeSearchLines true, print lines without search string
                 {
                     if (result == nullptr)
                     {
-                        countOccurrences++;
-                        if (printLineNumbers)
+                        countOccurrences++; // increment countOccurrences var
+                        if (printLineNumbers) // print line numbers
                             cout << currentLine << ": ";
                         cout << line << endl;
                     }
                 }
                 else
                 {
-                    if (result != nullptr)
+                    if (result != nullptr) // if ExcludeSearchLines false, print lines with search string
                     {
-                        countOccurrences++;
+                        countOccurrences++; // increment countOccurrences var
 
-                        if (printLineNumbers)
+                        if (printLineNumbers) // print line numbers
                             cout << currentLine << ": ";
                         cout << line << endl;
                     }
                 }
             }
-            if (printOccuranceCount)
+            if (printOccuranceCount) // print line occurance count if wanted 
             {
                 cout << "\nOccurrences of lines ";
-                if (ExcludeSearchLines)
+                if (ExcludeSearchLines) // handle different wording for ExcludeSearchLines
                     cout << "not ";
                 cout << "containing \""<< stringToSearch << "\": " << countOccurrences << endl;
             }
         }
         else
-            cerr << "Error opening file " << filename << endl;
+            cerr << "Error opening file " << filename << endl; // can't open file, print error
     }
 }
 
+// Asks user for needle (string) in haystack (string) and does a search on them
 void askForInputAndSearch(){
     string stringToSearchFrom, stringToSearch;
 
